@@ -1,7 +1,16 @@
+import os
 import cv2
 import numpy as np
+from PIL import Image
 
-img = cv2.imread('images/stars2.jpg')
+dir_src = 'images'
+dir_dest = 'detected_stars'
+filename = 'stars2.jpg'
+try:
+    os.mkdir(path)
+except:
+    pass
+img = cv2.imread(f'{dir_src}/{filename}')
 img_copy = img.copy()  # Make a copy of the original image
 gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -17,7 +26,7 @@ stars = []
 for i in range(1, num_labels):
     mask = (labels == i).astype(np.uint8)
     x, y = centroids[i]
-    min_radius = 1  # or any other minimum value you choose
+    min_radius = 2  # or any other minimum value you choose
     r = int((stats[i, cv2.CC_STAT_WIDTH] + stats[i, cv2.CC_STAT_HEIGHT]) / 4)
     if r >= min_radius:
         x, y = centroids[i]
@@ -26,7 +35,7 @@ for i in range(1, num_labels):
         cv2.circle(img_copy, (int(x), int(y)), r + 5, (0, 255, 0), 2)
         print(r)
 
-cv2.imwrite('detected_stars.jpg', img_copy)
+cv2.imwrite(f'{dir_dest}\detected_{filename}', img_copy)
 cv2.imshow('Detected Stars', img_copy)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
