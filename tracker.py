@@ -1,7 +1,5 @@
-import os
 import cv2
 import numpy as np
-from PIL import Image
 
 dir_src = 'images'
 dir_dest = 'detected_stars'
@@ -26,7 +24,7 @@ stars = []
 for i in range(1, num_labels):
     mask = (labels == i).astype(np.uint8)
     x, y = centroids[i]
-    min_radius = 2  # or any other minimum value you choose
+    min_radius = 1  # or any other minimum value you choose
     r = int((stats[i, cv2.CC_STAT_WIDTH] + stats[i, cv2.CC_STAT_HEIGHT]) / 4)
     if r >= min_radius:
         x, y = centroids[i]
