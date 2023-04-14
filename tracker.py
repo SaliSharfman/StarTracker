@@ -1,11 +1,15 @@
 import cv2
 import numpy as np
 
-img = cv2.imread('starsno.jpg')
+img = cv2.imread('images/stars2.jpg')
 img_copy = img.copy()  # Make a copy of the original image
 gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (5, 5), 0)
+_, thresh = cv2.threshold(blur, 5, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-_, thresh = cv2.threshold(gray, 5, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+cv2.imshow('Detected Stars', img_copy)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(thresh)
 
@@ -13,7 +17,7 @@ stars = []
 for i in range(1, num_labels):
     mask = (labels == i).astype(np.uint8)
     x, y = centroids[i]
-    min_radius = 5  # or any other minimum value you choose
+    min_radius = 1  # or any other minimum value you choose
     r = int((stats[i, cv2.CC_STAT_WIDTH] + stats[i, cv2.CC_STAT_HEIGHT]) / 4)
     if r >= min_radius:
         x, y = centroids[i]
