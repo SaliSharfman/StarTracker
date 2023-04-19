@@ -3,7 +3,6 @@ import os
 import cv2
 import numpy as np
 
-
 def make_dirs(dirs=[]):
     path = os.path.join(os.getcwd())
     for dir in dirs:
@@ -27,21 +26,23 @@ def makeCsv(l, folder='logs', filename="no_name"):
 
 
 def detect_img(filename, dir_src, dir_dest, dir_log):
-    print(f" start detecting {filename}")
-    img = cv2.imread(f'{dir_src}\{filename}')
-    img_copy = img.copy()  # Make a copy of the original image
-    print(f"copy: {type(img_copy[0])}, len is {len(img_copy)} on {len(img_copy[0])}")
+    try:
+        img = cv2.imread(f'{dir_src}\{filename}')
+        img_copy = img.copy()  # Make a copy of the original image
+    except:
+        print(f"cant open file {filename}")
+        return
     gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
-    print(f"grayscale: {type(gray[0])}, {len(gray)} on {len(gray[0])}")
     blur = cv2.GaussianBlur(gray, (3, 3), 0)
     avg=np.mean(gray)
-    print(f"avg: {np.mean(gray)}")
     cv2.namedWindow(f'{filename} Stars', cv2.WINDOW_NORMAL)
     cv2.resizeWindow(f'{filename} Stars', 800, 600)
     _, thresh = cv2.threshold(blur, avg*1.5, 255, cv2.THRESH_BINARY)
     cv2.imshow(f'{filename} Stars', img_copy)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+    print(f" start detecting {filename}")
     num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(thresh)
     stars=[['x','y','r','b']]
     print(f"found {num_labels} labels")
