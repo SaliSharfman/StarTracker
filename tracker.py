@@ -38,7 +38,7 @@ def detect_img(filename, dir_src, dir_dest, dir_log):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    print(f" start detecting {filename}")
+    print(f"start detecting {filename}")
     stars = [['x', 'y', 'r', 'b']]
     gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (3, 3), 0)
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     print("images:")
     for i in range(len(dataset)):
         print(f"{i+1}: {dataset[i]}")
-    str_in = input(print("input the number of the image for detecting, to detect all input <all>"))
+    str_in = input("input the number of the image for detecting, to detect all input <all>\n")
     if str_in =='all':
         for i in dataset:
             detect_img(filename=i, dir_src=dir_src, dir_dest=dir_dest, dir_log=dir_log)
