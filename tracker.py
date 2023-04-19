@@ -32,19 +32,19 @@ def detect_img(filename, dir_src, dir_dest, dir_log):
     except:
         print(f"cant open file {filename}")
         return
-    gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (3, 3), 0)
-    avg=np.mean(gray)
     cv2.namedWindow(f'{filename} Stars', cv2.WINDOW_NORMAL)
     cv2.resizeWindow(f'{filename} Stars', 800, 600)
-    _, thresh = cv2.threshold(blur, avg*1.5, 255, cv2.THRESH_BINARY)
     cv2.imshow(f'{filename} Stars', img_copy)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
     print(f" start detecting {filename}")
+    stars = [['x', 'y', 'r', 'b']]
+    gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (3, 3), 0)
+    avg = np.mean(gray)
+    _, thresh = cv2.threshold(blur, avg * 1.5, 255, cv2.THRESH_BINARY)
     num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(thresh)
-    stars=[['x','y','r','b']]
     print(f"found {num_labels} labels")
     percents=10
     for i in range(1, num_labels):
@@ -59,7 +59,7 @@ def detect_img(filename, dir_src, dir_dest, dir_log):
             b = cv2.mean(gray, cv2.UMat(mask))[0]
             stars.append((x, y, r, b))
             cv2.circle(img_copy, (int(x), int(y)), r + 5, (0, 255, 0), 2)
-    print('100% detected')
+    print(f'100% detected\n{len(stars)-1} stars detected')
     makeCsv(stars,folder=dir_log, filename=filename)
     cv2.imwrite(f'{dir_dest}\detected_{filename}', img_copy)
     print(f'detected_{filename} saved.')
