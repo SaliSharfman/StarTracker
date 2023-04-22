@@ -10,9 +10,18 @@ Evaluate the accuracy of the matching algorithm by comparing the positions of th
 
 # Part 2:
 
-<img src="https://i.imgur.com/zYflpev.jpg" alt="stars" hight= "120" width="480"/> <img src="https://i.imgur.com/VVikO6T.jpg" alt="stars detected" hight= "120" width="480"/>
+How to run: <br>
+ ``` python .\tracker.py ```
+
+<img src="https://i.imgur.com/1504ZL3.jpg" alt="stars" hight= "800" width="1200"/> 
 
 <img src="https://i.imgur.com/zrrSsIE.png" alt="stars csv" hight= "70" width="280"/>
 
 
 # Part 3:
+
+How to run: <br>
+``` python .\findMatch.py <img1> <img2> ```
+ 
+<img src="https://i.imgur.com/JR4UGfq.jpg" alt="Match" hight= "800" width="1200"/>
+
