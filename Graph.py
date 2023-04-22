@@ -37,10 +37,11 @@ class Node:
 
 
 class Edge:
-    def __init__(self, p1: int, p2: int, dist: float = -1):
+    def __init__(self, p1: int, p2: int, dist: float = -1, m: float = -1, n: float = -1):
         self.p1 = p1
         self.p2 = p2
-        self.dist = dist
+        self.d = dist
+        self.m, self.n = m, n
 
     def getP1(self) -> int:
         return self.p1
@@ -49,7 +50,7 @@ class Edge:
         return self.p2
 
     def getDist(self) -> float:
-        return self.dist
+        return self.d
 
     def __repr__(self):
         return f"id1:{self.p1} id2: {self.p2} distance:{self.dist} "
@@ -87,18 +88,19 @@ class Graph():
         dy = (y2 - y1)
         return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
 
-    def equation(self, src: int, dest: int) -> tuple:
+    def equationAndDist(self, src: int, dest: int) -> tuple:
         x1, y1 = self.nodes[src].getLocation()
         x2, y2 = self.nodes[dest].getLocation()
         dx = (x2 - x1)
         dy = (y2 - y1)
+        d = math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
         if x2 == x1:
             m = 0
             n = x1
         else:
             m = dy / dx
             n = y2 - (m * x2)
-        return (m, n)
+        return m, n, d
 
     def distNodeToPoint(self, v: int, p: tuple) -> float:
         x1, y1 = self.nodes[v].getLocation()
@@ -165,13 +167,16 @@ class Graph():
 
     def add_edge(self, id1: int, id2: int) -> bool:
         if self.edges.get(id1).get(id2) is None and id1 in self.nodes and id2 in self.nodes:
-            edge = Edge(id1, id2, self.dist(id1, id2))
+            m, n, d = self.equationAndDist(id1, id2)
+            edge = Edge(id1, id2, d, m, n)
             if edge.getDist() < self.min_dist:
                 self.min_dist = edge.getDist()
+
             self.edges.get(id1)[id2] = edge
             self.edges.get(id2)[id1] = edge
             self.nodes[id1].edges = self.nodes[id1].edges + 1
             self.nodes[id2].edges = self.nodes[id2].edges + 1
+
             self.mc = self.mc + 1
             return True
         return False
@@ -187,9 +192,12 @@ class Graph():
 
     def add_node(self, n: Node) -> bool:
         if self.nodes.get(n.getId()) is None:
+            sum = self.v_size() * self.avgB
+            sum += n.getB()
             self.nodes[n.getId()] = n
             self.edges[n.getId()] = {}
             self.mc = self.mc + 1
+            self.avgB = sum / self.v_size()
             return True
         return False
 

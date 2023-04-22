@@ -63,9 +63,15 @@ def drawLine(g, l, filename, dir_src, dir_dest):
     cv2.imwrite(f'{dir_dest}/{filename}', img_copy)
 
 
+# p1b = g1.nodes[edge1.getP1()].getB() / g1.avgB
+# p2b = g1.nodes[edge1.getP2()].getB() / g1.avgB
+# p3b = g2.nodes[edge2.getP1()].getB() / g2.avgB
+# p4b = g2.nodes[edge2.getP2()].getB() / g2.avgB
+
 def match_stars(g1, g2, file1, file2, dir_detected, dir_matched):
     # eps = 0.00009 / min(g1.get_min_dist(), g2.get_min_dist())
     eps = 0.009
+    eps2 = 5
     print(eps)
     l1 = []
     l2 = []
@@ -76,8 +82,10 @@ def match_stars(g1, g2, file1, file2, dir_detected, dir_matched):
                     f'Star {edge1.getP1()} and star {edge1.getP2()} in image1 EQUALS to Star {edge2.getP1()} and star {edge2.getP2()} in image2')
                 l1.append((edge1.getP1(), edge1.getP2()))
                 l2.append((edge2.getP1(), edge2.getP2()))
-    drawLine("detected_fr1.jpg", g1, l1)
-    drawLine("detected_fr2.jpg", g2, l2)
+
+    drawLine(g1, l1, filename=file1, dir_src=dir_detected, dir_dest=dir_matched)
+    drawLine(g2, l2, filename=file2, dir_src=dir_detected, dir_dest=dir_matched)
+
 
 
 if __name__ == '__main__':
