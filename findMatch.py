@@ -23,8 +23,11 @@ def drawLine(filename, g, l):
     cv2.imwrite(f'{dir_dest}\detected_{filename}', img_copy)
 
 
-def buildGraph(stars:list,filename:str):
-    g=Graph()
+
+def buildGraph(stars: list, filename: str, dir: str = ''):
+    if dir != '':
+        filename = f'{dir}/{filename}'
+    g = Graph()
     for i, _, _, _, _ in stars:
         if i == len(stars):
             break
@@ -43,14 +46,34 @@ def buildGraph(stars:list,filename:str):
     return g
 
 
-def match_stars(g1, g2):
-    eps = 0.01
+def drawLine(g, l, filename, dir_src, dir_dest):
+    print(filename)
+    print(dir_src)
+    try:
+        img = cv2.imread(f'{dir_src}/detected_{filename}')
+        img_copy = img.copy()  # Make a copy of the original image
+    except:
+        print(f"cant open file {filename}")
+        return
+    for i in l:
+        pos1 = tuple(map(int, g.nodes[i[0]].getLocation()))
+        pos2 = tuple(map(int, g.nodes[i[1]].getLocation()))
+        cv2.line(img_copy, pos1, pos2, (0, 255, 0), 1)
+
+    cv2.imwrite(f'{dir_dest}/{filename}', img_copy)
+
+
+def match_stars(g1, g2, file1, file2, dir_detected, dir_matched):
+    # eps = 0.00009 / min(g1.get_min_dist(), g2.get_min_dist())
+    eps = 0.009
+    print(eps)
     l1 = []
     l2 = []
     for edge1 in g1.get_all_edges():
         for edge2 in g2.get_all_edges():
             if abs(edge1.getDist() - edge2.getDist()) < eps:
-                print(f'Star {edge1.getP1()} and star {edge1.getP2()} in image1 EQUALS to Star {edge2.getP1()} and star {edge2.getP2()} in image2')
+                print(
+                    f'Star {edge1.getP1()} and star {edge1.getP2()} in image1 EQUALS to Star {edge2.getP1()} and star {edge2.getP2()} in image2')
                 l1.append((edge1.getP1(), edge1.getP2()))
                 l2.append((edge2.getP1(), edge2.getP2()))
     drawLine("detected_fr1.jpg", g1, l1)
@@ -59,14 +82,20 @@ def match_stars(g1, g2):
 
 if __name__ == '__main__':
     dir_src = 'images'
-    dir_dest = 'detected_stars'
-    dir_log = 'logs'
-    dir_json = 'graphs'
-    make_dirs([dir_src, dir_dest, dir_log,dir_json])
-    file1='fr1'
-    file2 = 'fr2'
-    # stars1 = detect_img(f"{file1}.jpg", dir_src, dir_dest, dir_log)
-    # stars2 = detect_img(f"{file2}.jpg", dir_src, dir_dest, dir_log)
-    g1 = Graph(f'{dir_json}/{file1}')
-    g2 = Graph(f'{dir_json}/{file2}')
-    match_stars(g1,g2)
+    make_dirs([dir_src])
+    dataset = os.listdir(dir_src)
+    file1 = 'fr1.jpg'
+    file2 = 'fr2.jpg'
+    if len(sys.argv) > 1:
+        file1 = sys.argv[1]
+        file2 = sys.argv[2]
+        run_all(file1, file2)
+    else:
+        print("images:")
+        for i in range(len(dataset)):
+            print(f"{i + 1}: {dataset[i]}")
+        input1 = input("input the number of the first image\n")
+        if int(input1) - 1 in range(len(dataset)):
+            input2 = input("input the number of the second image\n")
+            if int(input2) - 1 in range(len(dataset)):
+                run_all(img1=dataset[int(input2) - 1], img2=dataset[int(input2) - 1])

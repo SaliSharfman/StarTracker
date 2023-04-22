@@ -1,45 +1,58 @@
 import json
 import math
+
+
 class Node:
-    def __init__(self, node_id: int, pos: tuple=None,r:float=-1,b:float=-1):
+    def __init__(self, node_id: int, pos: tuple = None, r: float = -1, b: float = -1):
         self.edges = 0
         self.id = node_id
-        self.r=r
-        self.b=b
+        self.r = r
+        self.b = b
         if pos is not None:
-            x,y=pos
-            self.pos = float(x),float(y)
+            x, y = pos
+            self.pos = float(x), float(y)
         else:
             self.pos = None
-    def getId(self) ->int:
+
+    def getId(self) -> int:
         return self.id
-    def setId(self,id:int):
-        self.id=id
-    def getLocation(self) ->tuple:
+
+    def setId(self, id: int):
+        self.id = id
+
+    def getLocation(self) -> tuple:
         return self.pos
-    def setLocation(self,x:float,y:float):
-        self.pos=(x,y)
-    def getR(self) ->float:
+
+    def setLocation(self, x: float, y: float):
+        self.pos = (x, y)
+
+    def getR(self) -> float:
         return self.r
-    def getB(self) ->float:
+
+    def getB(self) -> float:
         return self.b
+
     def __repr__(self):
         return f"id:{self.id} edges: {self.edges} pos:{self.pos} radius:{self.r} brightness: {self.b}"
 
+
 class Edge:
-    def __init__(self, p1: int, p2: int,dist:float=-1):
+    def __init__(self, p1: int, p2: int, dist: float = -1):
         self.p1 = p1
         self.p2 = p2
         self.dist = dist
+
     def getP1(self) -> int:
         return self.p1
+
     def getP2(self) -> int:
         return self.p2
+
     def getDist(self) -> float:
         return self.dist
+
     def __repr__(self):
         return f"id1:{self.p1} id2: {self.p2} distance:{self.dist} "
-
 
 
 class Graph():
@@ -58,61 +71,65 @@ class Graph():
                 r = (float)(n["r"])
                 b = (float)(n["b"])
                 if "x" in n.keys():
-                    pos = ((float)(n["x"]),(float)(n["y"]))
-                node = Node(id,pos,r,b)
+                    pos = ((float)(n["x"]), (float)(n["y"]))
+                node = Node(id, pos, r, b)
                 self.add_node(node)
             edges = dict.get("Edges")
             for n in edges:
                 self.add_edge((int)(n["p1"]), (int)(n["p2"]))
 
-    def dist(self, p1:int, p2:int) -> float:
+    def dist(self, p1: int, p2: int) -> float:
         if self.nodes[p1].getLocation() is None or self.nodes[p2].getLocation() is None:
             return -1
-        x1,y1= self.nodes[p1].getLocation()
+        x1, y1 = self.nodes[p1].getLocation()
         x2, y2 = self.nodes[p2].getLocation()
-        dx= (x2-x1)
-        dy= (y2-y1)
-        return math.sqrt(math.pow(dx,2)+math.pow(dy,2))
+        dx = (x2 - x1)
+        dy = (y2 - y1)
+        return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
 
-    def equation(self, src:int, dest:int) -> tuple:
-        x1,y1= self.nodes[src].getLocation()
+    def equation(self, src: int, dest: int) -> tuple:
+        x1, y1 = self.nodes[src].getLocation()
         x2, y2 = self.nodes[dest].getLocation()
-        dx= (x2-x1)
-        dy= (y2-y1)
+        dx = (x2 - x1)
+        dy = (y2 - y1)
         if x2 == x1:
-            m=0
-            n=x1
+            m = 0
+            n = x1
         else:
-            m= dy/dx
-            n= y2-(m*x2)
-        return (m,n)
+            m = dy / dx
+            n = y2 - (m * x2)
+        return (m, n)
+
     def distNodeToPoint(self, v: int, p: tuple) -> float:
         x1, y1 = self.nodes[v].getLocation()
         x2, y2 = p
         dx = (x2 - x1)
         dy = (y2 - y1)
-        return math.sqrt(math.pow(dx,2)+math.pow(dy,2))
+        return math.sqrt(math.pow(dx, 2) + math.pow(dy, 2))
+
     def v_size(self) -> int:
         return len(self.nodes)
 
     def e_size(self) -> int:
         sum = 0
         for e in self.edges.values():
-            sum+= len(e)
-        return (int)(sum/2)
+            sum += len(e)
+        return (int)(sum / 2)
 
     def get_all_nodes(self) -> list:
-        ans=[]
+        ans = []
         for i in self.nodes.values():
             ans.append(i)
         return ans
+
     def get_all_edges(self) -> list:
-        ans=[]
+        ans = []
         for i in self.edges.keys():
             for j in self.edges[i].keys():
-                if i<=j:
+                if i <= j:
                     ans.append(self.edges[i][j])
         return ans
+
     def all_edges_of_node(self, id: int) -> bool or dict:
         if id not in self.nodes.keys():
             return False
@@ -122,6 +139,7 @@ class Graph():
                 if self.edges.get(id).get(i) is not None:
                     allout[i] = self.edges.get(id).get(i).getDist()
         return allout
+
     def all_edges_of_node(self, id: int) -> bool or dict:
         if id not in self.nodes.keys():
             return False
@@ -131,6 +149,7 @@ class Graph():
                 if self.edges.get(id).get(i) is not None:
                     allout[i] = self.edges.get(id).get(i).getDist()
         return allout
+
     def all_edges_of_node(self, id: int) -> bool or dict:
         if id not in self.nodes.keys():
             return False
@@ -146,13 +165,15 @@ class Graph():
 
     def add_edge(self, id1: int, id2: int) -> bool:
         if self.edges.get(id1).get(id2) is None and id1 in self.nodes and id2 in self.nodes:
-             edge=Edge(id1,id2,self.dist(id1,id2))
-             self.edges.get(id1)[id2]=edge
-             self.edges.get(id2)[id1] = edge
-             self.nodes[id1].edges=self.nodes[id1].edges+1
-             self.nodes[id2].edges = self.nodes[id2].edges + 1
-             self.mc = self.mc + 1
-             return True
+            edge = Edge(id1, id2, self.dist(id1, id2))
+            if edge.getDist() < self.min_dist:
+                self.min_dist = edge.getDist()
+            self.edges.get(id1)[id2] = edge
+            self.edges.get(id2)[id1] = edge
+            self.nodes[id1].edges = self.nodes[id1].edges + 1
+            self.nodes[id2].edges = self.nodes[id2].edges + 1
+            self.mc = self.mc + 1
+            return True
         return False
 
     # def add_node(self, node_id: int,pos: tuple=None,r:float=-1,b:float=-1) -> bool:
@@ -164,10 +185,10 @@ class Graph():
     #         return True
     #     return False
 
-    def add_node(self,n:Node) -> bool:
+    def add_node(self, n: Node) -> bool:
         if self.nodes.get(n.getId()) is None:
-            self.nodes[n.getId()]=n
-            self.edges[n.getId()]={}
+            self.nodes[n.getId()] = n
+            self.edges[n.getId()] = {}
             self.mc = self.mc + 1
             return True
         return False
@@ -176,27 +197,26 @@ class Graph():
         if node_id not in self.nodes.keys():
             return False
         self.mc = self.mc + len(self.edges[node_id])
-        indexes=[]
+        indexes = []
         for i in self.edges.get(node_id).keys():
             indexes.append(i)
         for i in indexes:
-            self.remove_edge(node_id,i)
+            self.remove_edge(node_id, i)
         del self.edges[node_id]
         del self.nodes[node_id]
         self.mc = self.mc + 1
         return True
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
-        if self.edges.get(node_id1).get(node_id2) is None or self.nodes[node_id1] is None or self.nodes[node_id2] is None:
+        if self.edges.get(node_id1).get(node_id2) is None or self.nodes[node_id1] is None or self.nodes[
+            node_id2] is None:
             return False
         del self.edges.get(node_id1)[node_id2]
         del self.edges.get(node_id2)[node_id1]
         self.nodes[node_id1].edges = self.nodes[node_id1].edges - 1
         self.nodes[node_id2].edges = self.nodes[node_id2].edges - 1
-        self.mc=self.mc+1
+        self.mc = self.mc + 1
         return True
-
-
 
     def save_to_json(self, file_name: str) -> bool:
         class JsonGraph():
@@ -224,6 +244,7 @@ class Graph():
         with open(file_name + ".json", "w") as f:
             json.dump(toSave, fp=f, indent=4, default=lambda o: o.__dict__)
         return True
+
     def __str__(self):
         return f"Graph: |V|={self.v_size()}, |E|={self.e_size()}"
 # p1=Node(1,(0,3),8,9)
@@ -243,5 +264,3 @@ class Graph():
 # print(g1.get_all_nodes())
 # print(g1.get_all_edges())
 # g1.save_to_json("yyy")
-
-
