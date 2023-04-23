@@ -1,3 +1,7 @@
+
+<img width="637" alt="a1" src="https://user-images.githubusercontent.com/77780368/233840956-c0758212-5e45-4955-8cb2-3860094078f3.png">
+
+
 # Part 1:
 
 Detect and extract stars from both images using a star detection algorithm such as the Hough Transform or the Harris Corner Detector.
