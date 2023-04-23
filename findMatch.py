@@ -73,17 +73,20 @@ def is_similar_triangle(triangle1, triangle2,eps):
 
 def match_stars(g1, g2, file1, file2, dir_detected, dir_matched, dir_log):
     # eps = 0.00009 / min(g1.get_min_dist(), g2.get_min_dist())
+    print("min dist: ",g1.maxR/g1.avgR," ",g2.maxR/g1.avgR)
     name1 = file1.split('.')[0]
     name2 = file2.split('.')[0]
     toCsv = [[name1, name2]]
     eps = 0.09
     print(f'mistake epsilon: {eps}')
-    def sort_key(node):
-        return -(node.getB()+10*node.getR())
+    def g1_sort_key(node):
+        return -(node.getB()+node.getR()*(g1.maxR/g1.avgR*1.4))
+    def g2_sort_key(node):
+        return -(node.getB()+node.getR()*(g2.maxR/g2.avgR*1.4))
     g1_v = g1.get_all_nodes()
-    g1_v.sort(key=sort_key)
+    g1_v.sort(key=g1_sort_key)
     g2_v = g2.get_all_nodes()
-    g2_v.sort(key=sort_key)
+    g2_v.sort(key=g2_sort_key)
     l1 = [(g1_v[0].getId(),g1_v[1].getId())]
     l2 = [(g2_v[0].getId(),g2_v[1].getId())]
     toCsv.append([g1_v[0].getId(),g2_v[0].getId()])
