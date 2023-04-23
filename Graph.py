@@ -64,6 +64,8 @@ class Graph():
         self.mc = 0
         self.min_dist = math.inf
         self.avgB = 0
+        self.maxR= 0
+        self.avgR = 0
         if dir != '':
             file_name = f'{dir}/{file_name}'
         file_name = file_name.split('.')[0]
@@ -200,12 +202,17 @@ class Graph():
 
     def add_node(self, n: Node) -> bool:
         if self.nodes.get(n.getId()) is None:
-            sum = self.v_size() * self.avgB
-            sum += n.getB()
+            sumb = self.v_size() * self.avgB
+            sumb += n.getB()
+            sumr = self.v_size() * self.avgR
+            sumr += n.getR()
             self.nodes[n.getId()] = n
             self.edges[n.getId()] = {}
             self.mc = self.mc + 1
-            self.avgB = sum / self.v_size()
+            if n.getR()>self.maxR:
+                self.maxR = n.getR()
+            self.avgB = sumb / self.v_size()
+            self.avgR = sumr / self.v_size()
             return True
         return False
 
