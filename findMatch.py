@@ -79,7 +79,7 @@ def match_stars(g1, g2, file1, file2, dir_detected, dir_matched, dir_log):
     eps = 0.09
     print(f'mistake epsilon: {eps}')
     def sort_key(node):
-        return -node.getB()
+        return -(node.getB()+10*node.getR())
     g1_v = g1.get_all_nodes()
     g1_v.sort(key=sort_key)
     g2_v = g2.get_all_nodes()
