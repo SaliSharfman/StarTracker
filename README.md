@@ -31,7 +31,7 @@ How to run: <br>
 
 
 # Part 4:
+[summary.pdf](https://github.com/SaliSharfman/StarTracker/files/11304827/summary.pdf)
 
-[סיכום_עבודה_שלנו.pdf](https://github.com/SaliSharfman/StarTracker/files/11304813/_._.pdf)
 
 
