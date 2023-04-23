@@ -31,4 +31,7 @@ How to run: <br>
 
 
 # Part 4:
-[Assignment summary](https://github.com/SaliSharfman/StarTracker/blob/main/Assignment%20summary.pdf)
+
+[סיכום_עבודה_שלנו.pdf](https://github.com/SaliSharfman/StarTracker/files/11304813/_._.pdf)
+
+
