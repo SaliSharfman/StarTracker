@@ -29,3 +29,6 @@ How to run: <br>
  
 <img src="https://i.imgur.com/CdCaTPu.jpg" alt="Match" hight= "800" width="1200"/>
 
+
+# Part 4:
+[Assignment summary](https://github.com/SaliSharfman/StarTracker/blob/main/Assignment%20summary.pdf)
