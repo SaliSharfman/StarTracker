@@ -73,15 +73,24 @@ def match_stars(g1, g2, file1, file2, dir_detected, dir_matched):
     eps = 0.009
     eps2 = 5
     print(eps)
+    tups = []
     l1 = []
     l2 = []
     for edge1 in g1.get_all_edges():
         for edge2 in g2.get_all_edges():
             if abs(edge1.getDist() - edge2.getDist()) < eps:
-                print(
-                    f'Star {edge1.getP1()} and star {edge1.getP2()} in image1 EQUALS to Star {edge2.getP1()} and star {edge2.getP2()} in image2')
-                l1.append((edge1.getP1(), edge1.getP2()))
-                l2.append((edge2.getP1(), edge2.getP2()))
+                tups.append((edge1, edge2))
+    for tup1, tup2 in zip(tups[::2], tups[1::2]):
+        if tup1[0].m / tup2[0].m - tup1[1].m / tup2[1].m < eps2:
+            print(
+                f'Star {tup1[0].getP1()} and star {tup1[0].getP2()} in image1 EQUALS to Star {tup1[1].getP1()} and star {tup1[1].getP2()} in image2')
+            l1.append((tup1[0].getP1(), tup1[0].getP2()))
+            l2.append((tup1[1].getP1(), tup1[1].getP2()))
+
+            print(
+                f'Star {tup2[0].getP1()} and star {tup2[0].getP2()} in image1 EQUALS to Star {tup2[1].getP1()} and star {tup2[1].getP2()} in image2')
+            l1.append((tup2[0].getP1(), tup2[0].getP2()))
+            l2.append((tup2[1].getP1(), tup2[1].getP2()))
 
     drawLine(g1, l1, filename=file1, dir_src=dir_detected, dir_dest=dir_matched)
     drawLine(g2, l2, filename=file2, dir_src=dir_detected, dir_dest=dir_matched)

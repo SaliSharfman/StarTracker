@@ -53,7 +53,7 @@ class Edge:
         return self.d
 
     def __repr__(self):
-        return f"id1:{self.p1} id2: {self.p2} distance:{self.dist} "
+        return f"id1:{self.p1} id2: {self.p2} distance:{self.d} "
 
 
 class Graph():
