@@ -58,11 +58,16 @@ class Edge:
 
 class Graph():
 
-    def __init__(self,file_name:str=""):
+    def __init__(self, file_name: str = '', dir: str = ''):
         self.nodes = {}
         self.edges = {}
         self.mc = 0
-        if file_name !="":
+        self.min_dist = math.inf
+        self.avgB = 0
+        if dir != '':
+            file_name = f'{dir}/{file_name}'
+        file_name = file_name.split('.')[0]
+        if file_name != "":
             with open(f'{file_name}.json', 'r') as f:
                 dict = json.load(f)
             nodes = dict.get("Nodes")
@@ -164,6 +169,9 @@ class Graph():
 
     def get_mc(self) -> int:
         return self.mc
+
+    def get_min_dist(self) -> float:
+        return self.min_dist
 
     def add_edge(self, id1: int, id2: int) -> bool:
         if self.edges.get(id1).get(id2) is None and id1 in self.nodes and id2 in self.nodes:
